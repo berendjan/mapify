@@ -20,12 +20,17 @@ output "subnets" {
   value       = module.vpc.subnets
 }
 
-output "eips" {
-  description = "EIP Outputs"
-  value       = module.ec2.eips
-}
+# output "eips" {
+#   description = "EIP Outputs"
+#   value       = module.ec2.eips
+# }
 
-output "volumes" {
-  description = "EBS Volume Outputs"
-  value       = module.ec2.volumes
-}
+# output "volumes" {
+#   description = "EBS Volume Outputs"
+#   value       = module.ec2.volumes
+# }
+
+# output "instances" {
+#   description = "EC2 Instance Outputs"
+#   value       = module.ec2.instances
+# }
