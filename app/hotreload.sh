@@ -3,8 +3,8 @@
 # Default values
 extensions="html,css,js,go,rs"
 sleep_time=1
-run_command=""
-build_command=""
+run_command=""    # ./main
+build_command=""  # go build main.go
 
 # Parse options
 while getopts "e:s:r:b:" opt; do
