@@ -72,51 +72,51 @@ module "vpc" {
   }
 }
 
-module "ec2" {
-  source = "./modules/ec2"
-  sg_parameters = {
-    sg1 = {
-      vpc_id = module.vpc.vpcs["vpc1"]["id"]
-      rules = [
-        { from_port = 22, to_port = 22, protocol = "tcp", cidr_blocks = ["0.0.0.0/0"], type = "ingress" },
-        { from_port = 80, to_port = 80, protocol = "tcp", cidr_blocks = ["0.0.0.0/0"], type = "ingress" },
-        { from_port = 443, to_port = 443, protocol = "tcp", cidr_blocks = ["0.0.0.0/0"], type = "ingress" },
-        { from_port = 0, to_port = 0, protocol = "all", cidr_blocks = ["0.0.0.0/0"], type = "egress" },
-      ]
-    }
-  }
-  ebs_volume_parameters = {
-    ebs1 = {
-      availability_zone = "${var.region}a"
-      size              = var.volume_size
-    }
-  }
-  ebs_volume_attachment_parameters = {
-    ebsa1 = {
-      device_name   = "/dev/sdf"
-      volume_name   = "ebs1"
-      instance_name = "instance1"
-    }
-  }
-  eip_parameters = {
-    eip1 = {
-      instance_name = "instance1"
-    }
-  }
-  instance_parameters = {
-    instance1 = {
-      ami                      = "ami-0d2ef3b94aac558f9"
-      availability_zone        = "${var.region}a"
-      instance_type            = var.instance_type
-      subnet_id                = module.vpc.subnets["subnet1"]["id"]
-      vpc_security_group_names = ["sg1"]
-      key_name                 = "keypair1"
-    }
-  }
-  keypair_parameters = {
-    keypair1 = {
-      public_key = file("~/.ssh/id_ed25519.pub")
-    }
-  }
-}
+# module "ec2" {
+#   source = "./modules/ec2"
+#   sg_parameters = {
+#     sg1 = {
+#       vpc_id = module.vpc.vpcs["vpc1"]["id"]
+#       rules = [
+#         { from_port = 22, to_port = 22, protocol = "tcp", cidr_blocks = ["0.0.0.0/0"], type = "ingress" },
+#         { from_port = 80, to_port = 80, protocol = "tcp", cidr_blocks = ["0.0.0.0/0"], type = "ingress" },
+#         { from_port = 443, to_port = 443, protocol = "tcp", cidr_blocks = ["0.0.0.0/0"], type = "ingress" },
+#         { from_port = 0, to_port = 0, protocol = "all", cidr_blocks = ["0.0.0.0/0"], type = "egress" },
+#       ]
+#     }
+#   }
+#   ebs_volume_parameters = {
+#     ebs1 = {
+#       availability_zone = "${var.region}a"
+#       size              = var.volume_size
+#     }
+#   }
+#   ebs_volume_attachment_parameters = {
+#     ebsa1 = {
+#       device_name   = "/dev/sdf"
+#       volume_name   = "ebs1"
+#       instance_name = "instance1"
+#     }
+#   }
+#   eip_parameters = {
+#     eip1 = {
+#       instance_name = "instance1"
+#     }
+#   }
+#   instance_parameters = {
+#     instance1 = {
+#       ami                      = "ami-0d2ef3b94aac558f9"
+#       availability_zone        = "${var.region}a"
+#       instance_type            = var.instance_type
+#       subnet_id                = module.vpc.subnets["subnet1"]["id"]
+#       vpc_security_group_names = ["sg1"]
+#       key_name                 = "keypair1"
+#     }
+#   }
+#   keypair_parameters = {
+#     keypair1 = {
+#       public_key = file("~/.ssh/id_ed25519.pub")
+#     }
+#   }
+# }
 
