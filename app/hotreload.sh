@@ -3,8 +3,8 @@
 # Default values
 extensions="html,css,js,go,rs"
 sleep_time=1
-run_command=""    # ./main
-build_command=""  # go build main.go
+run_command="go run main.go"
+log_debug=true
 
 # Parse options
 while getopts "e:s:r:b:" opt; do
@@ -27,28 +27,51 @@ echo "Sleep time: '$sleep_time' seconds"
 echo remember to use single quotes for the commands
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
-    # macOS detected, use shasum
+    # macOS detected
     hash_command="shasum"
 else
-    # Default to sha1sum (linux)
+    # Default (linux)
     hash_command="sha1sum"
 fi
 
-# Function to gracefully kill the previous process
+log() {
+  if $log_debug; then
+    echo "$*"
+  fi
+}
+
+log "pid $$"
+
+# Function to gracefully kill the child processes recursively
 cleanup() {
-  local pid=""
-  if [[ -f .hotreload ]]; then
-    read -r _ pid < .hotreload
-    if [[ -n "$pid" && $(ps -p $pid -o args=) == *"$run_command"* ]]; then
-      kill "$pid"
-      wait "$pid"
-    fi
+  local ppid=$1
+  local children=$(ps -o pid,ppid -ax | awk -v ppid=$ppid '$2==ppid {print $1}')
+
+  log "Child pid $children"
+
+  for pid in $children; do
+    cleanup $pid
+  done;
+
+  if [[ -n "$ppid" && -n $(ps -p "$ppid" -o args=) ]]; then
+
+    log "Killing process $ppid"
+    
+    kill $ppid 2>/dev/null
+    while kill -0 $ppid 2>/dev/null; do
+      sleep 0.1
+    done
   fi
 }
 
 stop() {
-  echo "cleaning up"
-  cleanup
+  echo ""
+  echo "Cleaning up"
+  if [[ -f .hotreload ]]; then
+    read -r _ previous_pid < .hotreload
+    rm .hotreload
+  fi
+  cleanup $previous_pid
   exit 0
 }
 
@@ -86,17 +109,18 @@ while true; do
   if [[ "$current_hash" != "$previous_hash" ]]; then
     echo "Hot-Reloading..."
 
-    cleanup
+    cleanup $previous_pid
 
     if [[ -n $build_command ]]; then
       $build_command &
       wait $!
     fi
     
+    # command redirect output, err to stdout, redirect input.
     $run_command &
     command_pid=$!
     echo "$current_hash $command_pid" > .hotreload
-    echo "started with pid $command_pid"
+    log "Started with pid $command_pid"
   fi
 
   sleep "$sleep_time"
