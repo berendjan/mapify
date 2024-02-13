@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Default values
-file_grep="^.+(go|css|html|rs|js)"
+extensions="html,css,js,go,rs"
 sleep_time=1
 run_command="go run main.go"
 log_debug=true
@@ -85,12 +85,15 @@ fi
 # Function to calculate cumulative hash of specified files
 calculate_hash() {
   local current_hash=""
-  for file in $(find . | grep -E $file_grep | sort); do
-    if [[ -z "$current_hash" ]]; then
-      current_hash=$(${hash_command} "$file" | awk '{print $1}')
-    else
-      current_hash=$(echo -n "$current_hash$(${hash_command} "$file" | awk '{print $1}')" | ${hash_command} | awk '{print $1}')
-    fi
+  IFS=',' read -ra ADDR <<< "$extensions"
+  for ext in "${ADDR[@]}"; do
+    for file in $(find . -type f -name "*.$ext" | sort); do
+      if [[ -z "$current_hash" ]]; then
+        current_hash=$(${hash_command} "$file" | awk '{print $1}')
+      else
+        current_hash=$(echo -n "$current_hash$(${hash_command} "$file" | awk '{print $1}')" | ${hash_command} | awk '{print $1}')
+      fi
+    done
   done
   echo "$current_hash"
 }

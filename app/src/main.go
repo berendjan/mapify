@@ -1,19 +1,47 @@
 package main
 
 import (
-	"com/mapify/pagerouter"
+	"html/template"
 	"log"
+	"net/http"
+	"os"
+	"time"
+
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 )
 
 func main() {
+	r := chi.NewRouter()
 
-	pageRouter, err := pagerouter.NewPageRouter("pages")
+	tmpl, err := template.ParseGlob("template/**")
 	if err != nil {
-		println(err.Error())
+		log.Fatal(err)
 	}
-	pageRouter.Print()
-	err = pageRouter.Run(3000)
+	style, err := os.ReadFile("style.css")
 	if err != nil {
-		log.Printf("Error running server: %s", err.Error())
+		log.Fatal(err)
 	}
+
+	// A good base middleware stack
+	r.Use(middleware.RequestID)
+	r.Use(middleware.RealIP)
+	r.Use(middleware.Logger)
+	r.Use(middleware.Recoverer)
+
+	// Set a timeout value on the request context (ctx), that will signal
+	// through ctx.Done() that the request has timed out and further
+	// processing should be stopped.
+	r.Use(middleware.Timeout(60 * time.Second))
+
+	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
+		tmpl.ExecuteTemplate(w, "index.html", "hello")
+	})
+
+	r.Get("/style.css", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Add("Content-Type", "text/css")
+		w.Write(style)
+	})
+
+	http.ListenAndServe(":3000", r)
 }
