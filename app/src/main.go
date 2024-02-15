@@ -7,6 +7,9 @@ import (
 	"os"
 	"time"
 
+	"com/mapify/handlers"
+	mymiddleware "com/mapify/middleware"
+
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 )
@@ -35,12 +38,18 @@ func main() {
 	r.Use(middleware.Timeout(60 * time.Second))
 
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		tmpl.ExecuteTemplate(w, "index.html", "hello")
+		tmpl.ExecuteTemplate(w, "index.html", "mapify")
 	})
 
 	r.Get("/style.css", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Add("Content-Type", "text/css")
 		w.Write(style)
+	})
+
+	r.Route("/components", func(r chi.Router) {
+		r.Use(mymiddleware.QueryParamsCtx)
+		r.Get("/hello", handlers.HelloHandlerFunc("John"))
+
 	})
 
 	http.ListenAndServe(":3000", r)

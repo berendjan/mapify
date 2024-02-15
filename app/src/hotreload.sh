@@ -1,9 +1,10 @@
 #!/bin/bash
 
 # Default values
-file_grep="^.+(go|css|html|rs|js)"
+file_grep="^.+\.(go|css|html|rs|js|templ)$"
 sleep_time=1
 run_command="go run main.go"
+build_command="templ generate"
 log_debug=true
 
 # Parse options
@@ -109,9 +110,10 @@ while true; do
     cleanup $previous_pid
 
     if [[ -n $build_command ]]; then
-      $build_command &
-      wait $!
+      $build_command
     fi
+    # rehash after build to prevent double updates
+    current_hash=$(calculate_hash)
     
     # command redirect output, err to stdout, redirect input.
     $run_command &
