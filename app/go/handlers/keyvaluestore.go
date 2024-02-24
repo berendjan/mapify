@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"com/mapify/structs"
 	"errors"
 	"sync"
 )
@@ -9,7 +10,6 @@ type keyValueStore map[any]any
 
 var store keyValueStore
 var once sync.Once
-
 var lock sync.RWMutex
 
 func getKeyValueStore() keyValueStore {
@@ -21,7 +21,16 @@ func getKeyValueStore() keyValueStore {
 	return store
 }
 
-func Write[K comparable, V any](key K, value V) (*V, error) {
+func Populate() {
+	contacts := [...]structs.Contact{
+		{Id: "1", First: "John", Last: "Smith", Phone: "123-456-7890", Email: "John@example.com"},
+		{Id: "2", First: "Dana", Last: "Crandith", Phone: "123-456-7890", Email: "dana@example.com"},
+		{Id: "3", First: "Edith", Last: "Neutvaar", Phone: "123-456-7890", Email: "edith@example.com"}}
+
+	Write("contacts", contacts[:])
+}
+
+func Write[K comparable, V any](key K, value V) *V {
 	lock.Lock()
 	defer lock.Unlock()
 	s := getKeyValueStore()
@@ -30,11 +39,11 @@ func Write[K comparable, V any](key K, value V) (*V, error) {
 	if ok {
 		typedV, okType := v.(V)
 		if okType {
-			return &typedV, nil
+			return &typedV
 		}
-		return nil, errors.New("WrongType")
+		return nil
 	} else {
-		return nil, errors.New("NotFound")
+		return nil
 	}
 }
 

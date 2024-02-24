@@ -1,0 +1,36 @@
+{{ template "index.html" . }}
+{{ define "title" }}Edit Contact{{ end }}
+{{ define "content" }}
+<div class="card">
+    <form action="/contacts/{{ .contact.Id }}/edit" method="post" class="w-48">
+        <fieldset>
+            <legend class="text-4xl">Contact Values</legend>
+            <p class="mt-4">
+                {{ template "input.html" ("arr" "Email" "email" "email" .contact.Email) }}
+                <span class="error"></span>
+            </p>
+            <p class="mt-2">
+                {{ template "input.html" ("arr" "First Name" "first_name" "text" .contact.First) }}
+                <span class="error"></span>
+            </p>
+            <p class="mt-2">
+                {{ template "input.html" ("arr" "Last Name" "last_name" "text" .contact.Last) }}
+                <span class="error"></span>
+            </p>
+            <p class="mt-2">
+                {{ template "input.html" ("arr" "Phone" "phone" "text" .contact.Phone) }}
+                <span class="error"></span>
+            </p>
+            <button class="btn ">Save</button>
+        </fieldset>
+    </form>
+</div>
+<div class="card">
+    <form action="/contacts/{{ .contact.Id }}/delete" method="post" class="mt-2">
+        <button class="btn">Delete Contact</button>
+    </form>
+    <p>
+        <a href="/contacts/" class="btn">Back</a>
+    </p>
+</div>
+{{ end }}

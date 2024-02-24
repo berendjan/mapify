@@ -1,0 +1,19 @@
+package components
+
+import "com/mapify/structs"
+import "fmt"
+
+templ ContactsDetails(contact structs.Contact) {
+	<div class="space-y-4">
+		<h1 class="text-4xl">{ contact.First } { contact.Last }</h1>
+		<div class="divider"></div>
+		<div>
+			<div>Phone: { contact.Phone }</div>
+			<div>Email: { contact.Email }</div>
+		</div>
+		<p>
+			<a href={ templ.SafeURL(fmt.Sprintf("/contacts/%s/edit", contact.Id)) } class="btn">Edit</a>
+			<a href="/contacts" class="btn">Back</a>
+		</p>
+	</div>
+}

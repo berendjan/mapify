@@ -1,0 +1,18 @@
+package components
+
+import "com/mapify/structs"
+
+templ Contacts(contacts []structs.Contact) {
+	<div>
+		<h1 class="text-4xl">CONTACTS.APP</h1>
+		<div class="text-4xl text-gray-400">A Demo Contacts Application</div>
+		<div class="divider"></div>
+		<div class="space-y-4">
+			@ContactsSearch()
+			@ContactsTable(contacts)
+			<p>
+				<a href="/contacts/new" class="btn mt-3">Add Contact</a>
+			</p>
+		</div>
+	</div>
+}

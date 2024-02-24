@@ -1,0 +1,39 @@
+package components
+
+import "com/mapify/structs"
+import "fmt"
+
+templ ContactsEdit(contact structs.Contact) {
+	<div class="card">
+		<form action={ templ.SafeURL(fmt.Sprintf("/contacts/%s/edit", contact.Id)) } method="post" class="w-48">
+			<fieldset>
+				<legend class="text-4xl">Contact Values</legend>
+				<p class="mt-4">
+					@Input("Email", "email", "email", contact.Email)
+					<span class="error"></span>
+				</p>
+				<p class="mt-2">
+					@Input("First Name", "first_name", "text", contact.First)
+					<span class="error"></span>
+				</p>
+				<p class="mt-2">
+					@Input("Last Name", "last_name", "text", contact.Last)
+					<span class="error"></span>
+				</p>
+				<p class="mt-2">
+					@Input("Phone", "phone", "text", contact.Phone)
+					<span class="error"></span>
+				</p>
+				<button class="btn ">Save</button>
+			</fieldset>
+		</form>
+	</div>
+	<div class="card">
+		<form action={ templ.SafeURL(fmt.Sprintf("/contacts/%s/delete", contact.Id)) } method="post" class="mt-2">
+			<button class="btn">Delete Contact</button>
+		</form>
+		<p>
+			<a href="/contacts/" class="btn">Back</a>
+		</p>
+	</div>
+}

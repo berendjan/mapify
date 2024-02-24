@@ -1,0 +1,46 @@
+{{ template "index.html" . }}
+{{ define "title" }}Contacts{{ end }}
+{{ define "content" }}
+<div>
+    <h1 class="text-4xl">CONTACTS.APP</h1>
+    <div class="text-2xl text-primary">A Demo Contacts Application</div>
+    <div class="divider"></div>
+    <div class="space-y-4">
+        <form action="/contacts" method="get" class="tool-bar">
+            <label for="search">Search Term</label>
+            <input id="search" type="search" name="q" class="input input-bordered mx-4" />
+            <input type="submit" value="Search" class="btn btn-primary" />
+        </form>
+        <div class="card">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>First</th>
+                        <th>Last</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{ range .contacts }}
+                    <tr>
+                        <td>{{ .First }}</td>
+                        <td>{{ .Last }}</td>
+                        <td>{{ .Phone }}</td>
+                        <td>{{ .Email }}</td>
+                        <td class="flex flex-row justify-evenly items-center">
+                            <a href="/contacts/{{ .Id }}/edit" class="btn px-6">Edit</a>
+                            <a href="/contacts/{{ .Id }}" class="btn px-6">View</a>
+                        </td>
+                    </tr>
+                    {{ end }}
+                </tbody>
+            </table>
+        </div>
+        <p>
+            <a href="/contacts/new" class="btn mt-3 btn-primary">Add Contact</a>
+        </p>
+    </div>
+</div>
+{{ end }}

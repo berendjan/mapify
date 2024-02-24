@@ -1,0 +1,36 @@
+package components
+
+import (
+	"fmt"
+	"com/mapify/structs"
+)
+
+templ ContactsTable(contacts []structs.Contact) {
+	<div class="card">
+		<table class="table">
+			<thead>
+				<tr>
+					<th>First</th>
+					<th>Last</th>
+					<th>Phone</th>
+					<th>Email</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				for _, contact := range contacts {
+					<tr>
+						<td>{ contact.First }</td>
+						<td>{ contact.Last }</td>
+						<td>{ contact.Phone }</td>
+						<td>{ contact.Email }</td>
+						<td class="flex flex-row justify-evenly items-center">
+							<a href={ templ.SafeURL(fmt.Sprintf("/contacts/%s/edit", contact.Id)) } class="btn px-6">Edit</a>
+							<a href={ templ.SafeURL(fmt.Sprintf("/contacts/%s", contact.Id)) } class="btn px-6">View</a>
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+}

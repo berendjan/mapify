@@ -1,0 +1,9 @@
+{{ define "input" }}<div class="relative">
+    <input id={{ .id }} name={{ .id }} type={{ .type }}
+        class="peer input placeholder-transparent focus:outline-none hover:bg-neutral transition-all" placeholder="stub"
+        value={{ .value }} />
+    <label for={{ .id }}
+        class="absolute left-1 -top-2.5 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-3 peer-placeholder-shown:left-3 peer-focus:-top-2.5 peer-focus:left-1 peer-focus:text-sm select-none pointer-events-none">
+        {{ .label }}
+    </label>
+</div>{{ end }}

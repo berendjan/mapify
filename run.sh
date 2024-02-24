@@ -1,6 +1,6 @@
-# in app, enable tailwindcss
-npx tailwindcss -i ./tailwind.css -o ./src/style.css --watch
+# in app/js, enable tailwindcss
+npx tailwindcss -i ./tailwind.css -o ../go/static/tailwind.css --watch
 
-# in app/src, enable hot reloading
-./reload.sh
+# in app/go, enable hot reloading
+./hotreload.sh
 

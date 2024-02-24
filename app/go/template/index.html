@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ block "title" . }}Home{{ end }}</title>
+    <link rel="stylesheet" href="/static/tailwind.css" type="text/css">
+    <link rel="stylesheet" href="/static/style.css" type="text/css">
+</head>
+
+<body hx-boost="true">
+    <div class="m-8  max-w-screen-lg mx-auto">
+        {{ block "content" . }} <a href="/contacts" class="btn text-blue-500">Go to Contacts</a>{{ end }}
+    </div>
+    <script src="/static/hotreload.js" type="text/javascript"></script>
+</body>
+
+</html>
